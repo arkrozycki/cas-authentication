@@ -80,7 +80,7 @@ function CASAuthentication(options) {
                     }
                     var success = result.serviceresponse.authenticationsuccess;
                     if (success) {
-                        return callback(null, success.user, success.attributes);
+                        return callback(null, success.user, success);
                     }
                     else {
                         return callback(new Error( 'CAS authentication failed.'));
