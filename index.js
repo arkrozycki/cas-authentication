@@ -80,6 +80,9 @@ function CASAuthentication(options) {
                     }
                     var success = result.serviceresponse.authenticationsuccess;
                     if (success) {
+
+                        this.validate_function
+
                         return callback(null, success.user, success);
                     }
                     else {
@@ -168,6 +171,8 @@ function CASAuthentication(options) {
     this.bounce_redirect = this.bounce_redirect.bind(this);
     this.block           = this.block.bind(this);
     this.logout          = this.logout.bind(this);
+
+    this.validate_function = options.validate_function || null;
 }
 
 /**
@@ -344,26 +349,43 @@ CASAuthentication.prototype._handleTicket = function(req, res, next) {
         response.on('end', function() {
             this._validate(body, function(err, user, attributes) {
                 if (err) {
-                    console.log(err);
+                    // console.log(err);
                     res.sendStatus(401);
                 }
                 else {
-                    req.session[ this.session_name ] = user;
-                    if (this.session_info) {
-                        req.session[ this.session_info ] = attributes || {};
+
+                    if(this.validate_function){
+                        this.validate_function(attributes, function(ok){
+                            if(ok){
+                                req.session[ this.session_name ] = user;
+                                if (this.session_info) {
+                                    req.session[ this.session_info ] = attributes || {};
+                                }
+                                res.redirect(req.session.cas_return_to);
+                            } 
+                            else {
+                                res.sendStatus(401);
+                            }
+                        })
                     }
-                    res.redirect(req.session.cas_return_to);
+                    else {
+                        req.session[ this.session_name ] = user;
+                        if (this.session_info) {
+                            req.session[ this.session_info ] = attributes || {};
+                        }
+                        res.redirect(req.session.cas_return_to);
+                    }
                 }
             }.bind(this));
         }.bind(this));
         response.on('error', function(err) {
-            console.log('Response error from CAS: ', err);
+            // console.log('Response error from CAS: ', err);
             res.sendStatus(401);
         }.bind(this));
     }.bind(this));
 
     request.on('error', function(err) {
-        console.log('Request error with CAS: ', err);
+        // console.log('Request error with CAS: ', err);
         res.sendStatus(401);
     }.bind(this));
 
