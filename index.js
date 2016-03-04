@@ -231,7 +231,7 @@ CASAuthentication.prototype._handle = function(req, res, next, authType) {
     }
     // If the authentication type is BLOCK, simply send a 401 response.
     else if (authType === AUTH_TYPE.BLOCK) {
-        res.sendStatus(401);
+        res.send(401, 'Unauthorized');
     }
     // If there is a CAS ticket in the query string, validate it with the CAS server.
     else if (req.query && req.query.ticket) {
@@ -349,22 +349,21 @@ CASAuthentication.prototype._handleTicket = function(req, res, next) {
         response.on('end', function() {
             this._validate(body, function(err, user, attributes) {
                 if (err) {
-                    // console.log(err);
-                    res.sendStatus(401);
+                    res.send(401, 'Unauthorized');
                 }
                 else {
-
                     if(this.validate_function){
-                        this.validate_function(attributes, function(ok){
+                        var self = this;
+                        this.validate_function(attributes, req, res, function(ok){
                             if(ok){
-                                req.session[ this.session_name ] = user;
-                                if (this.session_info) {
-                                    req.session[ this.session_info ] = attributes || {};
+                                req.session[ self.session_name ] = user;
+                                if (self.session_info) {
+                                    req.session[ self.session_info ] = attributes || {};
                                 }
                                 res.redirect(req.session.cas_return_to);
                             } 
                             else {
-                                res.sendStatus(401);
+                                res.send(401, 'Unauthorized');
                             }
                         })
                     }
@@ -380,13 +379,13 @@ CASAuthentication.prototype._handleTicket = function(req, res, next) {
         }.bind(this));
         response.on('error', function(err) {
             // console.log('Response error from CAS: ', err);
-            res.sendStatus(401);
+            res.send(401, 'Unauthorized');
         }.bind(this));
     }.bind(this));
 
     request.on('error', function(err) {
         // console.log('Request error with CAS: ', err);
-        res.sendStatus(401);
+        res.send(401, 'Unauthorized');
     }.bind(this));
 
     if (this.cas_version === 'saml1.1') {
