@@ -1,6 +1,7 @@
-# Express CAS Authentication
+# Restify CAS Authentication and JWT (JSON Web Tokens)
+Forked from Express CAS Authentication
 
-This is a CAS authentication library designed to be used with an Express server.
+This is a CAS authentication library designed to be used with an Restify server.
 
 It provides two middleware functions for controlling access to routes:
 
@@ -14,7 +15,7 @@ It also provides two route endpoint functions:
 
 ## Installation
 
-    npm install cas-authentication
+    npm install cas-authentication-restify-jwt
 
 ## Setup
 
@@ -29,9 +30,7 @@ var cas = new CASAuthentication({
     is_dev_mode     : false,
     dev_mode_user   : '',
     dev_mode_info   : {},
-    session_name    : 'cas_user',
-    session_info    : 'cas_userinfo',
-    destroy_session : false
+    jwt_secret      : 'kitty monitors'
 });
 ```
 
@@ -53,16 +52,7 @@ var cas = new CASAuthentication({
 ## Usage
 
 ```javascript
-var app = require('express')();
-var session = require('express-session');
-var CASAuthentication = require('cas-authentication');
-
-// Set up an Express session, which is required for CASAuthentication.
-app.use( session({
-    secret            : 'super secret key',
-    resave            : false,
-    saveUninitialized : true
-}));
+var CASAuthentication = require('cas-authentication-restify-jwt');
 
 // Create a new instance of CASAuthentication.
 var cas = new CASAuthentication({
@@ -85,7 +75,7 @@ app.get( '/api', cas.block, function ( req, res ) {
 // An example of accessing the CAS user session variable. This could be used to
 // retrieve your own local user records based on authenticated CAS username.
 app.get( '/api/user', cas.block, function ( req, res ) {
-    res.json( { cas_user: req.session[ cas.session_name ] } );
+    res.json( { cas_user: 'TODO:' } );
 });
 
 // Unauthenticated clients will be redirected to the CAS login and then to the
