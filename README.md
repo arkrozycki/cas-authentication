@@ -1,5 +1,7 @@
-# Restify CAS Authentication and JWT (JSON Web Tokens)
+# Restify CAS Authentication and JSON Web Tokens (JWT)
 Forked from Express CAS Authentication
+
+Why? Updated using restify for the framework. Also, using JWT instead of sessions so that its easier for clustered applications.
 
 This is a CAS authentication library designed to be used with an Restify server.
 
