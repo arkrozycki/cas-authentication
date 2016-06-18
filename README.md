@@ -32,7 +32,7 @@ var cas = new CASAuthentication({
     is_dev_mode     : false,
     dev_mode_user   : '',
     dev_mode_info   : {},
-    jwt_secret      : 'kitty monitors'
+    jwt_secret      : 'kittymonitors'
 });
 ```
 

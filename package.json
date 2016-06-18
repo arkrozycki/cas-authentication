@@ -1,7 +1,7 @@
 {
-  "name": "cas-authentication",
+  "name": "cas-authentication-restify-jwt",
   "version": "0.0.8",
-  "description": "A CAS authentication library designed to be used as middleware for an Express server.",
+  "description": "A CAS authentication library designed to be used as middleware for an Restify server",
   "keywords": [
     "cas",
     "central authentication service",
@@ -10,24 +10,22 @@
     "authentication",
     "login",
     "middleware",
-    "express"
+    "restify",
+    "jwt"
   ],
-  "homepage": "https://github.com/kylepixel/cas-authentication",
+  "homepage": "https://github.com/arkrozycki/cas-authentication",
   "bugs": {
-    "url": "https://github.com/kylepixel/cas-authentication/issues"
+    "url": "https://github.com/arkrozycki/cas-authentication/issues"
   },
   "license": "MIT",
   "author": "Kyle Maguire <kylepixel@gmail.com>",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kylepixel/cas-authentication.git"
+    "url": "https://github.com/arkrozycki/cas-authentication.git"
   },
   "dependencies": {
+    "jsonwebtoken": "^7.0.1",
     "xml2js": "^0.4.8"
-  },
-  "devDependencies": {
-    "express": "^4.12.3",
-    "express-session": "^1.11.1"
   }
 }
