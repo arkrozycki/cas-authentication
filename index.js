@@ -205,6 +205,12 @@ CASAuthentication.prototype._handle = function(req, res, next, authType) {
   if (req.headers.authorization) {
     var token = req.headers.authorization.split(' ')[1];
     var verifiedJwt = jwt.verify(token, this.jwt_secret);
+    console.log(verifiedJwt.exp, (((new Date()).getTime()) / 1000))
+
+    if (!verifiedJwt.exp || (verifiedJwt.exp < (((new Date()).getTime()) / 1000))) {
+      return next(new Error('Token expired'));
+    }
+
     if (!req.auth) {
       req.auth = {};
     }
@@ -401,8 +407,17 @@ CASAuthentication.prototype._handleTicket = function(req, res, next) {
 };
 
 CASAuthentication.prototype.tokenize = function(obj, cb) {
+  // add expiration
+  obj.exp = ((new Date()).addHours(8).getTime()) / 1000;
+  obj.sub = obj.email;
+
   var token = jwt.sign(obj, this.jwt_secret);
   cb(null, token);
+}
+
+Date.prototype.addHours = function(h) {
+  this.setTime(this.getTime() + (h * 60 * 60 * 1000));
+  return this;
 }
 
 module.exports = CASAuthentication;
