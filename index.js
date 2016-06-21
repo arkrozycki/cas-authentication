@@ -33,7 +33,6 @@ var AUTH_TYPE = {
  * @constructor
  */
 function CASAuthentication(options) {
-
   if (!options || typeof options !== 'object') {
     throw new Error('CAS Authentication was not given a valid configuration object.');
   }
@@ -205,7 +204,6 @@ CASAuthentication.prototype._handle = function(req, res, next, authType) {
   if (req.headers.authorization) {
     var token = req.headers.authorization.split(' ')[1];
     var verifiedJwt = jwt.verify(token, this.jwt_secret);
-    console.log(verifiedJwt.exp, (((new Date()).getTime()) / 1000))
 
     if (!verifiedJwt.exp || (verifiedJwt.exp < (((new Date()).getTime()) / 1000))) {
       return next(new Error('Token expired'));
@@ -214,6 +212,7 @@ CASAuthentication.prototype._handle = function(req, res, next, authType) {
     if (!req.auth) {
       req.auth = {};
     }
+
     req.auth.user = verifiedJwt;
     next();
   } else if (req.query && req.query.ticket) {
@@ -278,7 +277,7 @@ CASAuthentication.prototype._login = function(req, res, next) {
   res.redirect(this.cas_url + url.format({
     pathname: '/login',
     query: query
-  }), next);
+  }));
 };
 
 /**
@@ -410,7 +409,6 @@ CASAuthentication.prototype.tokenize = function(obj, cb) {
   // add expiration
   obj.exp = ((new Date()).addHours(8).getTime()) / 1000;
   obj.sub = obj.email;
-
   var token = jwt.sign(obj, this.jwt_secret);
   cb(null, token);
 }
