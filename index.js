@@ -370,9 +370,8 @@ CASAuthentication.prototype._handleTicket = function(req, res, next) {
             this.validate_function(attributes, req, res, function(ok) {
               if (ok) {
                 this.tokenize(attributes, function(err, token) {
-                  res.send(200, {
-                    token: token
-                  })
+                  req.headers.authorization = token;
+                  next();
                 });
               } else {
                 res.send(401, 'Unauthorized');
@@ -380,9 +379,8 @@ CASAuthentication.prototype._handleTicket = function(req, res, next) {
             })
           } else {
             this.tokenize(attributes, function(err, token) {
-              res.send(200, {
-                token: token
-              })
+              req.headers.authorization = token;
+              next();
             });
           }
         }
