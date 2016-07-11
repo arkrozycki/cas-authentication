@@ -371,7 +371,7 @@ CASAuthentication.prototype._handleTicket = function(req, res, next) {
               if (ok) {
                 this.tokenize(attributes, function(err, token) {
                   req.headers.authorization = token;
-                  req.cas_user = attributes;
+                  req.auth.user = attributes;
                   next();
                 });
               } else {
@@ -381,6 +381,7 @@ CASAuthentication.prototype._handleTicket = function(req, res, next) {
           } else {
             this.tokenize(attributes, function(err, token) {
               req.headers.authorization = token;
+              req.auth.user = attributes;
               next();
             });
           }
