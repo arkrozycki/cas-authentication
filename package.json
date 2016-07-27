@@ -11,7 +11,8 @@
     "login",
     "middleware",
     "restify",
-    "jwt"
+    "jwt",
+    "hoek"
   ],
   "homepage": "https://github.com/arkrozycki/cas-authentication",
   "bugs": {
