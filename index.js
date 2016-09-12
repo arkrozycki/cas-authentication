@@ -369,14 +369,14 @@ CASAuthentication.prototype._handleTicket = function(req, res, next) {
             var self = this;
             this.validate_function(attributes, req, res, function(ok) {
               if (ok) {
-                this.tokenize(attributes, function(err, token) {
+                self.tokenize(attributes, function(err, token) {
                   req.headers.authorization = token;
                   if (!req.auth) {
                     req.auth = {};
                   }
                   req.auth.user = attributes;
                   next();
-                });
+                }.bind(self));
               } else {
                 res.send(401, 'Unauthorized');
               }
